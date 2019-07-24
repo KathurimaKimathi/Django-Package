@@ -48,25 +48,10 @@ jobs:
             cd rp-portfolio
             twine upload dist/*
 
-      - run:
-          name: allow remote login
-          command: |
-            . nginxenv/bin/activate
-            cd rp-portfolio
-            ssh-add -l
-            ssh-add ~/.ssh/myawskey.pem
-            ssh ubuntu@52.14.242.217
-
-      - run:
-        name: Checking ping
-        command: |
-          . nginxenv/bin/activate
-          cd rp-portfolio
-          ansible all -i host.yml -m ping
-
-      - run:
-          name: Running playbook
-          command: |
-            . nginxenv/bin/activate
-            cd rp-portfolio
-            ansible-playbook -i host.yml playbook.yml
+        - run:
+            name: Running playbook
+            command: |
+              . nginxenv/bin/activate
+              cd rp-portfolio
+              pip install ansible
+              ansible-playbook -i hosts.yml playbook.yml
