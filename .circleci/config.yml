@@ -1,0 +1,50 @@
+version: 0.0.5
+
+jobs: 
+  build:
+    docker:
+      - image: circleci/python:3.7
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m virtualenv nginxenv
+            . nginxenv/bin/activate
+            cd rp-portfolio
+            pip install --upgrade twine
+            pip install -r requirements.txt
+
+      - run:
+          name: run tests
+          command: |
+            . nginxenv/bin/activate
+            cd rp-portfolio
+            coverage run --source="." manage.py test
+            coverage report
+      
+      - run:
+          name: init .pypirc
+          command: |
+            cd rp-portfolio
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = kathurima" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+
+      - run:
+          name: creating a distribution...
+          command: |
+            cd rp-portfolio
+            python3 setup.py sdist
+
+      - run:
+          name: uploading to pypi...
+          command: |
+            . nginxenv/bin/activate
+            cd rp-portfolio
+            twine upload dist/*
+
