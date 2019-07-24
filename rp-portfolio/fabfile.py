@@ -5,6 +5,6 @@ from fabric.api import *
 
 
 def run_fab():
-    local('sudo docker image build .')
-    local('sudo docker-compose up --build')
+    # local('sudo docker image build .')
+    # local('sudo docker-compose up --build')
     local('ansible-playbook -i hosts.yml playbook.yml')

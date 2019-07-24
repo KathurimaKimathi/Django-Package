@@ -9,8 +9,8 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='DjangoPackage-v0.2.2',
-    version='0.2.2',
+    name='DjangoPackage-v0.2.3',
+    version='0.2.3',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/KathurimaKimathi/DjangoPackage/',
