@@ -49,7 +49,7 @@ jobs:
             twine upload dist/*
 
       - run:
-            name: Running playbook
+            name: running playbook
             command: |
               . nginxenv/bin/activate
               cd rp-portfolio
