@@ -54,4 +54,4 @@ jobs:
               . nginxenv/bin/activate
               cd rp-portfolio
               pip install ansible
-              ansible-playbook -i hosts.yml playbook.yml
+              fab run_fab
