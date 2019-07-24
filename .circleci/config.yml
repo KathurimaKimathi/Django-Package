@@ -54,5 +54,5 @@ jobs:
               . nginxenv/bin/activate
               cd rp-portfolio
               pip install ansible
-              pip install fabric
+              pip install fabric3
               fab run_fab
