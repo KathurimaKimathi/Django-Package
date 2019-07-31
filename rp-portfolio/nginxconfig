@@ -1,0 +1,15 @@
+server {
+    listen 7070;
+    server_name 18.191.142.78;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location /static/ {
+            root /home/ubuntu/kathurima/rp-portfolio;
+    }
+
+    location / {
+            include proxy_params;
+            proxy_pass http://unix:/home/ubuntu/kathurima/rp-portfolio/personal_portfolio.sock;
+    }
+}

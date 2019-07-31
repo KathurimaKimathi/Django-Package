@@ -5,29 +5,140 @@
   #hosts: localhost
   become: True        #Makes you an user for the remote host
   tasks:        # Tasks to be performed
-    - name: Create file
-      copy:     # Ansible module
-        src: /home/kathurima/Music
-      #If you wanted to copy from a particular source, you would have used 'src:' instead of 'content'
-        #content: Create \n      # What is to be written in the test.txt
-        #dest: /home/kathurima/Music/tmp
-        dest: /home/kathurima/Music/tmp
+    # - name: Create file
+    #   copy:     # Ansible module
+    #     src: /home/kathurima/Music
+    #   #If you wanted to copy from a particular source, you would have used 'src:' instead of 'content'
+    #     #content: Create \n      # What is to be written in the test.txt
+    #     #dest: /home/kathurima/Music/tmp
+    #     dest: /home/kathurima/Music/tmp
+    - name: add universe repository for bionic
+      apt_repository: 
+        repo: deb http://archive.ubuntu.com/ubuntu bionic universe
+        state: present
+      when: ansible_distribution_release == 'bionic'
 
+#------------------------------------------------------------------------------------------------------#
+#                                   BASIC SETUP AND INSTALLATION
+#------------------------------------------------------------------------------------------------------#
     - name: Install a list of packages
       apt:
         name: "{{ packages }}"
       vars:
         packages:
-        - htop
-        - python3-pip
+        - locales
         - build-essential
+        - python3-apt
+        - python3-pip
+        - htop
         - python-setuptools
         - fabric
+        - git
         - nginx
         state: forcereinstall
 
     - name: Install pip packages
       pip:
-        name: ['Django', 'gunicorn', 'flake8', 'coverage',
-         'pytz', 'sqlparse', 'DjangoPackage-v0.1.6']
+        name: "{{ packages }}"
+      vars: 
+        packages:
+        - model_mommy
+        - ansible
+        - coverage
+        - sentry-sdk==0.10.1
+        - certifi==2019.6.16
+        - django-prometheus==1.0.15
+        - gunicorn==19.9.0
+        - prometheus-client==0.7.1
+        - pytz==2019.1
+        - sqlparse==0.3.0
+        - urllib3==1.25.3
+        - Django==2.2.2
+        - twine
 
+    - name: Upgrade pip
+      pip: name=pip state=latest
+      tags:
+        - packages
+
+    - name: Create directory myname
+      file:
+        state: directory
+        path: kathurima
+    
+    # - name: setup git configuration
+    #   apt:
+    #     name: git
+    #     state: latest
+    #   become: yes
+
+    - name: Pull project from github
+      git:
+        repo: 'https://github.com/KathurimaKimathi/testdjangopackage.git'
+        dest: kathurima/
+        update: no
+          
+    - name: install virtualenv
+      pip: 
+        name: 
+          - virtualenv
+    
+    - name: install virtualenv
+      pip: name=virtualenv
+          
+    - name: create virtualenv
+      command: /usr/local/bin/virtualenv kathurima/testpkgenv
+      
+    - name: installing requirements
+      pip:
+        requirements: /home/ubuntu/kathurima/rp-portfolio/requirements.txt
+        virtualenv: /home/ubuntu/kathurima/testpkgenv
+        virtualenv_python: python3.6
+
+    - name: activate venv and make migrations
+      shell: |
+        . /home/ubuntu/kathurima/testpkgenv/bin/activate
+        python3 /home/ubuntu/kathurima/rp-portfolio/manage.py migrate
+
+    # - name: grant user ownership to pollsapp folder
+    #   command: "chown sam:www-data /home/sam/muoki/pollsapp"
+    #   become: yes
+    - name: Recursively change ownership of a directory
+      file:
+        path: /home/ubuntu/kathurima/rp-portfolio
+        state: directory
+        recurse: yes
+        owner: ubuntu
+
+#------------------------------------------------------------------------------------------------------#
+#                                   NGINX
+#------------------------------------------------------------------------------------------------------#
+  # tasks:
+    - name: ensure nginx is at the latest version
+      apt: name=nginx state=latest
+      become: yes
+
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
+      become: yes
+
+    - name: copy the nginx config file and restart nginx
+      copy:
+        src: /home/kathurima/Music/Docker/Django-Package/rp-portfolio/nginxconfig
+        dest: /etc/nginx/sites-available
+      become: yes
+
+    - name: create symlink
+      file:
+        src: /etc/nginx/sites-available/nginxconfig
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+      become: yes
+    
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes

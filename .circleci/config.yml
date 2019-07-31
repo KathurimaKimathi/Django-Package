@@ -47,12 +47,3 @@ jobs:
             . nginxenv/bin/activate
             cd rp-portfolio
             twine upload dist/*
-
-      - run:
-            name: running playbook
-            command: |
-              . nginxenv/bin/activate
-              cd rp-portfolio
-              pip install ansible
-              pip install fabric3
-              fab run_fab
