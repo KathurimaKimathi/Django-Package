@@ -10,6 +10,6 @@ server {
 
     location / {
             include proxy_params;
-            proxy_pass localhost:8080;
+            proxy_pass http://unix:/home/kathurima/ansible-deploy/rp-portfolio/personal_portfolio.sock;
     }
 }

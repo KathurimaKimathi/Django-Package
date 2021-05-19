@@ -16,6 +16,7 @@
         name: "{{ packages }}"
       vars:
         packages:
+          - remove certbot
           - python3-certbot-nginx
                     
     - name: Enable UFW
