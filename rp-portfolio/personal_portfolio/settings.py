@@ -35,7 +35,7 @@ SECRET_KEY = "!^_6%0so9$a@u-w22nc56xcp0^spoo4k^3q!j016o5hll+#c#o"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.191.142.78', 'oreonbloggers.duckdns.org']
+ALLOWED_HOSTS = ['35.242.170.205', 'kathurimaportfolio.duckdns.org', '127.0.0.1']
 
 
 # Application definition

@@ -1,15 +1,15 @@
 server {
-    listen 7070;
-    server_name 18.191.142.78;
+    listen 80;
+    server_name kathurimaportfolio.duckdns.org;
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {
-            root /home/ubuntu/kathurima/rp-portfolio;
+            root /home/kathurima/Documents/Work/Personal/Django-Package/rp-portfolio/static/;
     }
 
     location / {
             include proxy_params;
-            proxy_pass http://unix:/home/ubuntu/kathurima/rp-portfolio/personal_portfolio.sock;
+            proxy_pass localhost:8080;
     }
 }

@@ -1,14 +1,13 @@
 ---
 - hosts: all
-  remote_user: root
+  remote_user: kathurima
   become: yes
   gather_facts: True
 
-  tasks:            
-          
-          - name: start gunicorn
-            shell: |
-              . /home/sam/muoki/venv/bin/activate
-              cd /home/sam/muoki/pollsapp
-              gunicorn --daemon --workers 3 --bind unix:/home/sam/muoki/pollsapp/pollsapp.sock pollsapp.wsgi
-            # command: /home/sam/muoki/venv/bin/gunicorn --daemon --workers 3 --bind unix:/home/sam/muoki/pollsapp/pollsapp.sock /home/sam/muoki/pollsapp/pollsapp.wsgi
+  tasks:     
+    - name: start gunicorn
+      shell: |
+        . /home/kathurima/Documents/Work/Personal/dpenv/bin/activate
+        cd /home/kathurima/Documents/Work/Personal/Django-Package/rp-portfolio
+        gunicorn --daemon --workers 3 --bind unix:/home/kathurima/Documents/Work/Personal/Django-Package/rp-portfolio/personal_portfolio.sock /home/kathurima/Documents/Work/Personal/Django-Package/rp-portfolio/personal_portfolio/personal_portfolio.wsgi
+      # command: /home/sam/muoki/venv/bin/gunicorn --daemon --workers 3 --bind unix:/home/sam/muoki/pollsapp/pollsapp.sock /home/sam/muoki/pollsapp/pollsapp.wsgi

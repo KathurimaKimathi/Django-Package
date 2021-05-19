@@ -4,14 +4,7 @@
   #host = All -- Incase you have many servers in your ssh.cfg file
   #hosts: localhost
   become: True        #Makes you an user for the remote host
-  tasks:        # Tasks to be performed
-    # - name: Create file
-    #   copy:     # Ansible module
-    #     src: /home/kathurima/Music
-    #   #If you wanted to copy from a particular source, you would have used 'src:' instead of 'content'
-    #     #content: Create \n      # What is to be written in the test.txt
-    #     #dest: /home/kathurima/Music/tmp
-    #     dest: /home/kathurima/Music/tmp
+  tasks: 
     - name: add universe repository for bionic
       apt_repository: 
         repo: deb http://archive.ubuntu.com/ubuntu bionic universe
@@ -32,7 +25,6 @@
         - python3-pip
         - htop
         - python-setuptools
-        - fabric
         - git
         - nginx
         state: forcereinstall
@@ -45,37 +37,29 @@
         - model_mommy
         - ansible
         - coverage
-        - sentry-sdk==0.10.1
-        - certifi==2019.6.16
-        - django-prometheus==1.0.15
-        - gunicorn==19.9.0
-        - prometheus-client==0.7.1
-        - pytz==2019.1
-        - sqlparse==0.3.0
-        - urllib3==1.25.3
-        - Django==2.2.2
+        - sentry-sdk
+        - certifi
+        - django-prometheus
+        - gunicorn
+        - prometheus-client
+        - Django
         - twine
+        - fabric3
 
     - name: Upgrade pip
       pip: name=pip state=latest
       tags:
         - packages
 
-    - name: Create directory myname
+    - name: Create directory
       file:
         state: directory
-        path: kathurima
-    
-    # - name: setup git configuration
-    #   apt:
-    #     name: git
-    #     state: latest
-    #   become: yes
+        path: ansible-deploy
 
     - name: Pull project from github
       git:
-        repo: 'https://github.com/KathurimaKimathi/testdjangopackage.git'
-        dest: kathurima/
+        repo: 'https://github.com/KathurimaKimathi/Django-Package.git'
+        dest: ansible-deploy
         update: no
           
     - name: install virtualenv
@@ -87,28 +71,28 @@
       pip: name=virtualenv
           
     - name: create virtualenv
-      command: /usr/local/bin/virtualenv kathurima/testpkgenv
+      command: /usr/local/bin/virtualenv ansible-deploy/dpenv
       
     - name: installing requirements
       pip:
-        requirements: /home/ubuntu/kathurima/rp-portfolio/requirements.txt
-        virtualenv: /home/ubuntu/kathurima/testpkgenv
+        requirements: /home/kathurima/ansible-deploy/rp-portfolio/requirements.txt
+        virtualenv: /home/kathurima/ansible-deploy/dpenv
         virtualenv_python: python3.6
 
     - name: activate venv and make migrations
       shell: |
-        . /home/ubuntu/kathurima/testpkgenv/bin/activate
-        python3 /home/ubuntu/kathurima/rp-portfolio/manage.py migrate
+        . /home/kathurima/ansible-deploy/dpenv/bin/activate
+        python3 /home/kathurima/ansible-deploy/rp-portfolio/manage.py migrate
 
     # - name: grant user ownership to pollsapp folder
     #   command: "chown sam:www-data /home/sam/muoki/pollsapp"
     #   become: yes
     - name: Recursively change ownership of a directory
       file:
-        path: /home/ubuntu/kathurima/rp-portfolio
+        path: /home/kathurima/ansible-deploy/rp-portfolio
         state: directory
         recurse: yes
-        owner: ubuntu
+        owner: kathurima
 
 #------------------------------------------------------------------------------------------------------#
 #                                   NGINX
@@ -126,7 +110,7 @@
 
     - name: copy the nginx config file and restart nginx
       copy:
-        src: /home/kathurima/Music/Docker/Django-Package/rp-portfolio/nginxconfig
+        src: /home/kathurima/Documents/Work/Personal/Django-Package/rp-portfolio/nginxconfig
         dest: /etc/nginx/sites-available
       become: yes
 
