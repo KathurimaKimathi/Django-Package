@@ -1,28 +1,15 @@
 server {
-<<<<<<< HEAD
     listen 80;
     server_name kathurimaportfolio.duckdns.org;
-=======
-    listen 7070;
-    server_name 34.105.128.60;
->>>>>>> d65236684cdd545f4eb70b50346fb6a4d6f53359
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {
-<<<<<<< HEAD
             root /home/kathurima/Documents/Work/Personal/Django-Package/rp-portfolio/static/;
-=======
-            root /home/kathurima/ansible-deploy/rp-portfolio;
->>>>>>> d65236684cdd545f4eb70b50346fb6a4d6f53359
     }
 
     location / {
             include proxy_params;
-<<<<<<< HEAD
             proxy_pass localhost:8080;
-=======
-            proxy_pass http://unix:/home/kathurima/ansible-deploy/rp-portfolio/personal_portfolio.sock;
->>>>>>> d65236684cdd545f4eb70b50346fb6a4d6f53359
     }
 }
