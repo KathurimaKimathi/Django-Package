@@ -5,11 +5,11 @@ server {
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {
-            root /home/ubuntu/kathurima/rp-portfolio;
+            root /home/kathurima/ansible-deploy/rp-portfolio;
     }
 
     location / {
             include proxy_params;
-            proxy_pass http://unix:/home/ubuntu/kathurima/rp-portfolio/personal_portfolio.sock;
+            proxy_pass http://unix:/home/kathurima/ansible-deploy/rp-portfolio/personal_portfolio.sock;
     }
 }
